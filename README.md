@@ -1,4 +1,4 @@
-# Reddit_Group_Project
+# Reddit Group Project
 This project is focused towards researching and tracking the UMD subreddit in order to monitor engagement and posts. Furtheremore, we will analyze the spread of misinformation on posts, and we will also look at trends and shifts that occur in the posts throughout the semester, while categorizing them by type.
 
 Team members: 
