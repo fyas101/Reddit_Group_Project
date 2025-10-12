@@ -9,4 +9,5 @@ Team members:
 Domain focus and problem statement:
 We are focused on analyzing the UMD subreddit posts while categorizing posts by keywords, tone, and length in order to understand the spread of misinformation.
 
-Function library overview and organization
+Function library overview and organization: 
+
