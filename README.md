@@ -2,6 +2,8 @@ This project is focused towards researching and tracking the UMD subreddit in or
 
 
 Team members: ● Michael Caroselli: Notetaker ● John Horky: Researcher ● Fatima Yasar: Project Coordinator
+
+
 Domain focus and problem statement: We are focused on analyzing the UMD subreddit posts while categorizing posts by keywords, tone, and length in order to understand the spread of misinformation.
 
 
