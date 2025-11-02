@@ -11,4 +11,4 @@ Our function library is organized in a way that begins with functions that allow
 
 
 
-As for individual contributions, Micheal Caroselli did the first five functions, John Horky did the middle five functions, and Fatima Yasar did the last five functions.
+As for individual contributions, Micheal Caroselli did the first five functions, John Horky did the middle five functions, and Fatima Yasar did the last five functions. In terms of our classes, Micheal created the classes for our function groups #1 and #2, Fatima created the class for the functions in group #3 as well as reviewd the final project to submit and John created the classes for functions in group #4 and #5.
