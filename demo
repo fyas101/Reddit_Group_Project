@@ -1,1 +1,236 @@
+#!/usr/bin/env python3
+"""
+Reddit Analysis System - Demo Script
 
+This script demonstrates the key functions and classes in our Reddit analysis library
+with realistic UMD subreddit scenarios.
+
+Author: Reddit Analysis Team - INST326
+"""
+
+import sys
+import os
+from datetime import datetime, timedelta
+
+# Import our sample data
+try:
+    from posts import (
+        SAMPLE_POSTS, ACADEMIC_POSTS, HUMOR_POSTS, MISINFORMATION_POSTS,
+        POSTS_BY_USER, HIGH_ENGAGEMENT_POSTS, get_post_statistics
+    )
+    print("✓ Sample posts loaded successfully")
+except ImportError:
+    print("✗ Error: Could not load sample posts")
+    print("  Make sure 'posts' file exists in the same directory")
+    sys.exit(1)
+
+# Import utility functions
+try:
+    from utils import (
+        create_sample_post, create_sample_posts, format_engagement_display,
+        format_date_display, CATEGORY_KEYWORDS, MISINFORMATION_KEYWORDS
+    )
+    print("✓ Utility functions loaded successfully")
+except ImportError:
+    print("✗ Error: Could not load utils")
+    print("  Make sure 'utils.py' file exists")
+    sys.exit(1)
+
+
+def demo_data_overview():
+    """Display overview of sample data."""
+    print("\n📊 SAMPLE DATA OVERVIEW")
+    print("=" * 60)
+    
+    stats = get_post_statistics()
+    
+    print(f"\nDataset Statistics:")
+    print(f"  Total Posts: {stats['total_posts']}")
+    print(f"  Unique Users: {stats['unique_users']}")
+    print(f"  Misinformation Posts: {stats['misinformation_count']}")
+    
+    print(f"\nPosts by Category:")
+    for category, count in stats['by_category'].items():
+        percentage = (count / stats['total_posts']) * 100
+        print(f"  {category.capitalize():12} - {count:2d} posts ({percentage:5.1f}%)")
+    
+    print(f"\nTotal Engagement Metrics:")
+    total_interactions = stats['total_upvotes'] + stats['total_comments']
+    print(f"  Upvotes:  {stats['total_upvotes']:6,}")
+    print(f"  Comments: {stats['total_comments']:6,}")
+    print(f"  Views:    {stats['total_views']:6,}")
+    print(f"  Total Interactions: {total_interactions:,}")
+    
+    avg_engagement = total_interactions / stats['total_posts']
+    print(f"\nAverage Engagement per Post: {avg_engagement:.1f} interactions")
+
+
+def demo_post_cleaning():
+    """Demonstrate post cleaning and duplicate detection."""
+    print("\n\n🧹 POST CLEANING DEMO")
+    print("=" * 60)
+    
+    # Sample messy posts with URLs, hashtags, and mentions
+    messy_posts = [
+        "Check out this link! https://sketchy-site.com #UMD @everyone THIS IS IMPORTANT!!!",
+        "Does anyone know about the new dining hall? I heard it's good. #terps",
+        "https://reddit.com/r/UMD lol this is so funny haha @testudo_fan",
+        "CMSC351 exam tips??? Need help ASAP!!! @professor #finals"
+    ]
+    
+    print("Sample Messy Posts (before cleaning):")
+    for i, post in enumerate(messy_posts, 1):
+        print(f"\n{i}. Original ({len(post)} chars):")
+        print(f"   '{post}'")
+        print(f"   Contains: ", end="")
+        flags = []
+        if 'http' in post or 'www' in post:
+            flags.append("URLs")
+        if '@' in post:
+            flags.append("mentions")
+        if '#' in post:
+            flags.append("hashtags")
+        if '!' in post:
+            flags.append("punctuation")
+        print(", ".join(flags))
+    
+    print("\n" + "-" * 60)
+    print("After cleaning (simulated):")
+    print("  - URLs removed")
+    print("  - Mentions (@) removed")
+    print("  - Hashtags (#) removed")
+    print("  - Punctuation removed")
+    print("  - Converted to lowercase")
+    print("  - Extra whitespace trimmed")
+    
+    print("\n" + "-" * 60)
+    print("Duplicate Detection Example:")
+    
+    existing_posts = [
+        "Does anyone know about the new dining hall",
+        "Looking for study partners for CMSC351",
+        "Basketball game was amazing tonight"
+    ]
+    
+    test_posts = [
+        ("does anyone know about the new dining hall? i heard its good", True),
+        ("What's the best study spot on campus", False),
+        ("looking for study partners for cmsc 351 exam", True)
+    ]
+    
+    print("\nExisting posts in database:")
+    for i, post in enumerate(existing_posts, 1):
+        print(f"  {i}. '{post}'")
+    
+    print("\nTesting new posts for duplicates:")
+    for post, expected_dup in test_posts:
+        status = "DUPLICATE" if expected_dup else "UNIQUE"
+        print(f"\n  New: '{post[:50]}...'")
+        print(f"  Expected: {status}")
+
+
+def demo_content_categorization():
+    """Demonstrate content categorization and tone analysis."""
+    print("\n\n📊 CONTENT CATEGORIZATION DEMO")
+    print("=" * 60)
+    
+    print("Analyzing posts from UMD subreddit:\n")
+    
+    # Show distribution of categories
+    category_counts = {}
+    tone_counts = {}
+    
+    for post in SAMPLE_POSTS:
+        cat = post['category']
+        tone = post['tone']
+        category_counts[cat] = category_counts.get(cat, 0) + 1
+        tone_counts[tone] = tone_counts.get(tone, 0) + 1
+    
+    print("Category Distribution:")
+    for category in sorted(category_counts.keys()):
+        count = category_counts[category]
+        bar = "█" * count
+        print(f"  {category:12} [{count:2d}] {bar}")
+    
+    print("\nTone Distribution:")
+    for tone in sorted(tone_counts.keys()):
+        count = tone_counts[tone]
+        bar = "█" * count
+        print(f"  {tone:12} [{count:2d}] {bar}")
+    
+    print("\n" + "-" * 60)
+    print("Sample Post Analysis:\n")
+    
+    # Show detailed analysis of first 5 posts
+    for i, post in enumerate(SAMPLE_POSTS[:5], 1):
+        print(f"{i}. '{post['title']}'")
+        print(f"   Text: {post['text'][:60]}...")
+        print(f"   Category: {post['category']} | Tone: {post['tone']}")
+        print(f"   Engagement: {format_engagement_display(post['upvotes'], post['comments'])}")
+        if post['is_disinformation']:
+            print(f"   ⚠️  MISINFORMATION DETECTED")
+        print()
+
+
+def demo_misinformation_detection():
+    """Demonstrate misinformation detection."""
+    print("\n\n⚠️  MISINFORMATION DETECTION DEMO")
+    print("=" * 60)
+    
+    print(f"Detection Keywords: {len(MISINFORMATION_KEYWORDS)} total")
+    print(f"Sample keywords: {', '.join(MISINFORMATION_KEYWORDS[:8])}")
+    
+    print(f"\n" + "-" * 60)
+    print(f"Misinformation Posts Found: {len(MISINFORMATION_POSTS)}\n")
+    
+    for i, post in enumerate(MISINFORMATION_POSTS, 1):
+        print(f"{i}. '{post['title']}'")
+        print(f"   Text: {post['text'][:70]}...")
+        
+        # Find which keywords were matched
+        matched_keywords = []
+        text_lower = post['text'].lower()
+        for keyword in MISINFORMATION_KEYWORDS:
+            if keyword in text_lower:
+                matched_keywords.append(keyword)
+        
+        print(f"   Matched keywords: {', '.join(matched_keywords)}")
+        print(f"   Engagement: {post['upvotes']} upvotes, {post['comments']} comments")
+        print()
+    
+    # Calculate misinformation rate
+    total_posts = len(SAMPLE_POSTS)
+    misinfo_count = len(MISINFORMATION_POSTS)
+    misinfo_rate = (misinfo_count / total_posts) * 100
+    
+    print(f"Misinformation Rate: {misinfo_rate:.1f}% ({misinfo_count}/{total_posts} posts)")
+
+
+def demo_user_tracking():
+    """Demonstrate user activity tracking."""
+    print("\n\n👥 USER TRACKING DEMO")
+    print("=" * 60)
+    
+    print(f"Tracking {len(POSTS_BY_USER)} unique users\n")
+    
+    # Calculate user statistics
+    user_stats = []
+    for username, posts in POSTS_BY_USER.items():
+        total_upvotes = sum(p['upvotes'] for p in posts)
+        total_comments = sum(p['comments'] for p in posts)
+        total_engagement = total_upvotes + total_comments
+        misinfo_count = sum(1 for p in posts if p['is_disinformation'])
+        
+        user_stats.append({
+            'username': username,
+            'post_count': len(posts),
+            'total_engagement': total_engagement,
+            'avg_engagement': total_engagement / len(posts),
+            'misinfo_posts': misinfo_count
+        })
+    
+    # Sort by total engagement
+    user_stats.sort(key=lambda x: x['total_engagement'], reverse=True)
+    
+    print("Top Users by Engagement:\n")
+    for i, user in enumerate(user_stats[:5
