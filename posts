@@ -1,1 +1,418 @@
+"""
+Sample Reddit Posts Data
 
+Collection of sample UMD subreddit posts for testing and demonstration.
+Posts have varied timestamps, engagement metrics, and categories.
+
+Author: Reddit Analysis Team - INST326
+"""
+
+from datetime import datetime, timedelta
+import random
+
+# Helper function to generate random times
+def random_time_ago(days_range=(0, 30)):
+    """Generate a random datetime within the specified day range."""
+    days_ago = random.randint(days_range[0], days_range[1])
+    hours_ago = random.randint(0, 23)
+    minutes_ago = random.randint(0, 59)
+    return datetime.utcnow() - timedelta(days=days_ago, hours=hours_ago, minutes=minutes_ago)
+
+# Comprehensive sample posts
+SAMPLE_POSTS = [
+    {
+        "title": "CMSC351 Final Tips?",
+        "text": "Anyone have advice for the CMSC351 final? What should I focus on studying? The exam is next week and I'm stressing out.",
+        "selftext": "Anyone have advice for the CMSC351 final? What should I focus on studying? The exam is next week and I'm stressing out.",
+        "username": "terp_student",
+        "upvotes": 45,
+        "comments": 23,
+        "views": 312,
+        "category": "academics",
+        "tone": "neutral",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((1, 3)).isoformat(),
+        "timestamp": random_time_ago((1, 3)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1001",
+        "post_hint": "text"
+    },
+    {
+        "title": "Testudo spotted near McKeldin lol",
+        "text": "Just saw Testudo chilling by the library haha. Made my day! Anyone else see him?",
+        "selftext": "Just saw Testudo chilling by the library haha. Made my day! Anyone else see him?",
+        "username": "testudo_fan",
+        "upvotes": 189,
+        "comments": 42,
+        "views": 756,
+        "category": "humor",
+        "tone": "humorous",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((0, 1)).isoformat(),
+        "timestamp": random_time_ago((0, 1)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1002",
+        "post_hint": "text"
+    },
+    {
+        "title": "BREAKING: Rumor about campus closing",
+        "text": "I heard from unconfirmed sources that campus might close next week. Can't believe this! Allegedly the administration announced it.",
+        "selftext": "I heard from unconfirmed sources that campus might close next week. Can't believe this! Allegedly the administration announced it.",
+        "username": "news_poster",
+        "upvotes": 12,
+        "comments": 67,
+        "views": 892,
+        "category": "news",
+        "tone": "uncertain",
+        "is_disinformation": True,
+        "created_utc": random_time_ago((0, 0)).isoformat(),
+        "timestamp": random_time_ago((0, 0)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1003",
+        "post_hint": "text"
+    },
+    {
+        "title": "Best dining hall?",
+        "text": "New student here. Which dining hall has the best food? Looking for recommendations! I've tried 251 North so far.",
+        "selftext": "New student here. Which dining hall has the best food? Looking for recommendations! I've tried 251 North so far.",
+        "username": "dining_critic",
+        "upvotes": 67,
+        "comments": 45,
+        "views": 534,
+        "category": "advice",
+        "tone": "neutral",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((2, 4)).isoformat(),
+        "timestamp": random_time_ago((2, 4)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1004",
+        "post_hint": "text"
+    },
+    {
+        "title": "Homecoming game this weekend!",
+        "text": "Who's going to the homecoming game? Let's meet up at the stadium! Game starts at 3pm on Saturday.",
+        "selftext": "Who's going to the homecoming game? Let's meet up at the stadium! Game starts at 3pm on Saturday.",
+        "username": "game_watcher",
+        "upvotes": 234,
+        "comments": 89,
+        "views": 1247,
+        "category": "social",
+        "tone": "informative",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((3, 5)).isoformat(),
+        "timestamp": random_time_ago((3, 5)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1005",
+        "post_hint": "text"
+    },
+    {
+        "title": "Parking is literally impossible",
+        "text": "Spent 30 minutes looking for parking this morning. This is the worst! I hate this so much.",
+        "selftext": "Spent 30 minutes looking for parking this morning. This is the worst! I hate this so much.",
+        "username": "campus_explorer",
+        "upvotes": 342,
+        "comments": 134,
+        "views": 1823,
+        "category": "random",
+        "tone": "angry",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((4, 6)).isoformat(),
+        "timestamp": random_time_ago((4, 6)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1006",
+        "post_hint": "text"
+    },
+    {
+        "title": "Study group for INST326?",
+        "text": "Looking for people to study with for the upcoming project. Anyone interested? We can meet at McKeldin.",
+        "selftext": "Looking for people to study with for the upcoming project. Anyone interested? We can meet at McKeldin.",
+        "username": "study_buddy",
+        "upvotes": 56,
+        "comments": 28,
+        "views": 245,
+        "category": "academics",
+        "tone": "neutral",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((5, 7)).isoformat(),
+        "timestamp": random_time_ago((5, 7)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1007",
+        "post_hint": "text"
+    },
+    {
+        "title": "Stamp food court recommendations?",
+        "text": "What's the best place to eat at Stamp? Need some variety in my diet lol. The pizza place is getting old.",
+        "selftext": "What's the best place to eat at Stamp? Need some variety in my diet lol. The pizza place is getting old.",
+        "username": "advice_seeker",
+        "upvotes": 78,
+        "comments": 34,
+        "views": 412,
+        "category": "advice",
+        "tone": "humorous",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((6, 8)).isoformat(),
+        "timestamp": random_time_ago((6, 8)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1008",
+        "post_hint": "text"
+    },
+    {
+        "title": "Allegedly huge announcement coming",
+        "text": "Heard a rumor that there's going to be a shocking announcement about tuition. Sources say it's confirmed?? Can't believe this if true.",
+        "selftext": "Heard a rumor that there's going to be a shocking announcement about tuition. Sources say it's confirmed?? Can't believe this if true.",
+        "username": "news_poster",
+        "upvotes": 15,
+        "comments": 78,
+        "views": 623,
+        "category": "news",
+        "tone": "uncertain",
+        "is_disinformation": True,
+        "created_utc": random_time_ago((0, 1)).isoformat(),
+        "timestamp": random_time_ago((0, 1)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1009",
+        "post_hint": "text"
+    },
+    {
+        "title": "McKeldin late night hours?",
+        "text": "Does McKeldin stay open 24/7 during finals week? Need a good study spot that's quiet.",
+        "selftext": "Does McKeldin stay open 24/7 during finals week? Need a good study spot that's quiet.",
+        "username": "library_regular",
+        "upvotes": 92,
+        "comments": 19,
+        "views": 334,
+        "category": "academics",
+        "tone": "neutral",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((7, 9)).isoformat(),
+        "timestamp": random_time_ago((7, 9)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1010",
+        "post_hint": "text"
+    },
+    {
+        "title": "Professor recommendations for MATH140?",
+        "text": "Which professor should I take for MATH140 next semester? Any tips or advice would be helpful!",
+        "selftext": "Which professor should I take for MATH140 next semester? Any tips or advice would be helpful!",
+        "username": "terp_student",
+        "upvotes": 123,
+        "comments": 67,
+        "views": 689,
+        "category": "academics",
+        "tone": "neutral",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((8, 10)).isoformat(),
+        "timestamp": random_time_ago((8, 10)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1011",
+        "post_hint": "text"
+    },
+    {
+        "title": "Basketball game was insane!",
+        "text": "That buzzer beater was crazy! Best game I've seen all season. Who else was there?",
+        "selftext": "That buzzer beater was crazy! Best game I've seen all season. Who else was there?",
+        "username": "game_watcher",
+        "upvotes": 456,
+        "comments": 112,
+        "views": 2134,
+        "category": "social",
+        "tone": "humorous",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((1, 2)).isoformat(),
+        "timestamp": random_time_ago((1, 2)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1012",
+        "post_hint": "text"
+    },
+    {
+        "title": "Eppley gym equipment broken?",
+        "text": "Has anyone else noticed that half the equipment at Eppley is out of order? Maybe we should complain.",
+        "selftext": "Has anyone else noticed that half the equipment at Eppley is out of order? Maybe we should complain.",
+        "username": "campus_explorer",
+        "upvotes": 167,
+        "comments": 54,
+        "views": 823,
+        "category": "random",
+        "tone": "uncertain",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((9, 11)).isoformat(),
+        "timestamp": random_time_ago((9, 11)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1013",
+        "post_hint": "text"
+    },
+    {
+        "title": "Diamondback article on new policy",
+        "text": "Did anyone see the news update in the Diamondback about the new parking policy? Thoughts?",
+        "selftext": "Did anyone see the news update in the Diamondback about the new parking policy? Thoughts?",
+        "username": "news_poster",
+        "upvotes": 89,
+        "comments": 43,
+        "views": 567,
+        "category": "news",
+        "tone": "informative",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((10, 12)).isoformat(),
+        "timestamp": random_time_ago((10, 12)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1014",
+        "post_hint": "text"
+    },
+    {
+        "title": "Movie night at Stamp tonight!",
+        "text": "They're showing a movie at Stamp tonight at 8pm. Who wants to hangout and watch?",
+        "selftext": "They're showing a movie at Stamp tonight at 8pm. Who wants to hangout and watch?",
+        "username": "event_organizer",
+        "upvotes": 134,
+        "comments": 38,
+        "views": 712,
+        "category": "social",
+        "tone": "informative",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((0, 1)).isoformat(),
+        "timestamp": random_time_ago((0, 1)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1015",
+        "post_hint": "text"
+    },
+    {
+        "title": "Midterm grades are out",
+        "text": "Just got my midterm grades back. How did everyone else do? I'm not sure how I feel about mine.",
+        "selftext": "Just got my midterm grades back. How did everyone else do? I'm not sure how I feel about mine.",
+        "username": "study_buddy",
+        "upvotes": 201,
+        "comments": 145,
+        "views": 1456,
+        "category": "academics",
+        "tone": "uncertain",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((11, 13)).isoformat(),
+        "timestamp": random_time_ago((11, 13)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1016",
+        "post_hint": "text"
+    },
+    {
+        "title": "Free food at Stamp right now lol",
+        "text": "There's some event with free pizza at Stamp. Get here quick before it's gone haha!",
+        "selftext": "There's some event with free pizza at Stamp. Get here quick before it's gone haha!",
+        "username": "dining_critic",
+        "upvotes": 523,
+        "comments": 87,
+        "views": 2345,
+        "category": "humor",
+        "tone": "humorous",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((0, 0)).isoformat(),
+        "timestamp": random_time_ago((0, 0)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1017",
+        "post_hint": "text"
+    },
+    {
+        "title": "Shocking conspiracy about campus wifi",
+        "text": "I heard from allegedly reliable sources that the campus wifi is tracking everything we do. This is a total scam!",
+        "selftext": "I heard from allegedly reliable sources that the campus wifi is tracking everything we do. This is a total scam!",
+        "username": "news_poster",
+        "upvotes": 8,
+        "comments": 92,
+        "views": 734,
+        "category": "news",
+        "tone": "angry",
+        "is_disinformation": True,
+        "created_utc": random_time_ago((12, 14)).isoformat(),
+        "timestamp": random_time_ago((12, 14)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1018",
+        "post_hint": "text"
+    },
+    {
+        "title": "Registration tips?",
+        "text": "Registration is coming up and I need help planning my schedule. Any recommendations for easy electives?",
+        "selftext": "Registration is coming up and I need help planning my schedule. Any recommendations for easy electives?",
+        "username": "advice_seeker",
+        "upvotes": 145,
+        "comments": 78,
+        "views": 923,
+        "category": "advice",
+        "tone": "neutral",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((13, 15)).isoformat(),
+        "timestamp": random_time_ago((13, 15)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1019",
+        "post_hint": "text"
+    },
+    {
+        "title": "Random thought about Testudo",
+        "text": "idk why but I feel like Testudo looks different this year. Does he get cleaned or something? Random question lol",
+        "selftext": "idk why but I feel like Testudo looks different this year. Does he get cleaned or something? Random question lol",
+        "username": "testudo_fan",
+        "upvotes": 234,
+        "comments": 67,
+        "views": 1123,
+        "category": "random",
+        "tone": "humorous",
+        "is_disinformation": False,
+        "created_utc": random_time_ago((14, 16)).isoformat(),
+        "timestamp": random_time_ago((14, 16)).isoformat(),
+        "url": "https://reddit.com/r/UMD/post_1020",
+        "post_hint": "text"
+    }
+]
+
+# Additional test data sets organized by category
+ACADEMIC_POSTS = [post for post in SAMPLE_POSTS if post["category"] == "academics"]
+HUMOR_POSTS = [post for post in SAMPLE_POSTS if post["category"] == "humor"]
+NEWS_POSTS = [post for post in SAMPLE_POSTS if post["category"] == "news"]
+ADVICE_POSTS = [post for post in SAMPLE_POSTS if post["category"] == "advice"]
+SOCIAL_POSTS = [post for post in SAMPLE_POSTS if post["category"] == "social"]
+RANDOM_POSTS = [post for post in SAMPLE_POSTS if post["category"] == "random"]
+
+# Misinformation posts
+MISINFORMATION_POSTS = [post for post in SAMPLE_POSTS if post["is_disinformation"] == True]
+RELIABLE_POSTS = [post for post in SAMPLE_POSTS if post["is_disinformation"] == False]
+
+# User-specific post collections
+POSTS_BY_USER = {}
+for post in SAMPLE_POSTS:
+    username = post["username"]
+    if username not in POSTS_BY_USER:
+        POSTS_BY_USER[username] = []
+    POSTS_BY_USER[username].append(post)
+
+# High engagement posts (more than 200 total interactions)
+HIGH_ENGAGEMENT_POSTS = [
+    post for post in SAMPLE_POSTS 
+    if (post["upvotes"] + post["comments"]) > 200
+]
+
+# Recent posts (within last 3 days)
+RECENT_POSTS = [
+    post for post in SAMPLE_POSTS
+    if (datetime.utcnow() - datetime.fromisoformat(post["created_utc"])).days < 3
+]
+
+# Summary statistics
+def get_post_statistics():
+    """Get summary statistics about the sample posts."""
+    return {
+        "total_posts": len(SAMPLE_POSTS),
+        "by_category": {
+            "academics": len(ACADEMIC_POSTS),
+            "humor": len(HUMOR_POSTS),
+            "news": len(NEWS_POSTS),
+            "advice": len(ADVICE_POSTS),
+            "social": len(SOCIAL_POSTS),
+            "random": len(RANDOM_POSTS)
+        },
+        "misinformation_count": len(MISINFORMATION_POSTS),
+        "unique_users": len(POSTS_BY_USER),
+        "total_upvotes": sum(post["upvotes"] for post in SAMPLE_POSTS),
+        "total_comments": sum(post["comments"] for post in SAMPLE_POSTS),
+        "total_views": sum(post["views"] for post in SAMPLE_POSTS)
+    }
+
+
+if __name__ == "__main__":
+    # Display sample data statistics when run directly
+    print("Reddit Sample Posts - Data Summary")
+    print("=" * 50)
+    
+    stats = get_post_statistics()
+    print(f"\nTotal Posts: {stats['total_posts']}")
+    print(f"Unique Users: {stats['unique_users']}")
+    print(f"\nPosts by Category:")
+    for category, count in stats['by_category'].items():
+        print(f"  {category.capitalize():12} - {count} posts")
+    
+    print(f"\nMisinformation Posts: {stats['misinformation_count']}")
+    print(f"Reliable Posts: {stats['total_posts'] - stats['misinformation_count']}")
+    
+    print(f"\nTotal Engagement:")
+    print(f"  Upvotes: {stats['total_upvotes']:,}")
+    print(f"  Comments: {stats['total_comments']:,}")
+    print(f"  Views: {stats['total_views']:,}")
+    
+    print("\nSample posts loaded successfully!")
