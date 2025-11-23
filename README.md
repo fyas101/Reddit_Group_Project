@@ -11,4 +11,7 @@ Our function library is organized in a way that begins with functions that allow
 
 
 
-As for individual contributions, Micheal Caroselli did the first five functions, John Horky did the middle five functions, and Fatima Yasar did the last five functions. In terms of our classes, Micheal created the classes for our function groups #1 and #2, Fatima created the class for the functions in group #3 as well as reviewd the final project to submit and John created the classes for functions in group #4 and #5.
+As for individual contributions, Micheal Caroselli did the first five functions, John Horky did the middle five functions, and Fatima Yasar did the last five functions. In terms of our classes, Micheal created the classes for our function groups #1 and #2, Fatima created the class for the functions in group #3 as well as reviewd the final project to submit and John created the classes for functions in group #4 and #5. The class numbers are documented on our functions as comments with their associated purposes as well.
+
+In terms of our incorporations for project 03, we added polymorphic composition to the analysis class due to the fact that it had a "has a" relationship. Furtheremore, we incorporated inheritance in our content categorizer class due to the fact that it had a "is a" relationship. Lastly, we modified our design to incorporate an abstract base class for any analzyer objects we wish to create and this includes defining a standard interface, maintaining history of analyses, as well as enforcing subclasses. 
+
