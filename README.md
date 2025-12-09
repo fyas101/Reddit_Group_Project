@@ -15,3 +15,6 @@ As for individual contributions, Micheal Caroselli did the first five functions,
 
 In terms of our incorporations for project 03, we added polymorphic composition to the analysis class due to the fact that it had a "has a" relationship. Furtheremore, we incorporated inheritance in our content categorizer class due to the fact that it had a "is a" relationship. Lastly, we modified our design to incorporate an abstract base class for any analzyer objects we wish to create and this includes defining a standard interface, maintaining history of analyses, as well as enforcing subclasses. 
 
+Here is our final video link:
+https://1drv.ms/v/c/b06a888733c29146/EW4RRPHzvDpDlNkoQpOffcIBaAvKOuuZML39XU2Nrk2mgw?e=bsjXDo
+
