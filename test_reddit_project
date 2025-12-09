@@ -1,1 +1,276 @@
+from abc import ABC, abstractmethod
+from typing import Any, List, Dict
+from datetime import datetime, timedelta
+from pathlib import Path
+import re, json, random
+
+
+
+
+# base analyzers
+
+
+class BaseAnalyzer(ABC):
+   def __init__(self):
+       self._history: List[Dict[str, Any]] = []
+
+
+   @abstractmethod
+   def analyze(self, data: Any) -> Any:
+       pass
+
+
+   @abstractmethod
+   def describe(self) -> str:
+       pass
+
+
+   def add_history(self, result):
+       self._history.append(result)
+
+
+   @property
+   def history(self):
+       return self._history
+
+
+
+
+# processing functions
+
+
+def categorize_by_tone(text: str) -> str:
+   txt = text.lower()
+   if "lol" in txt or "haha" in txt: return "humorous"
+   if "hate" in txt or txt.isupper(): return "angry"
+   if "sure" in txt or "yeah right" in txt: return "sarcastic"
+   if "?" in text: return "neutral"
+   return "informative"
+
+
+
+
+def detect_misinformation(text: str) -> Dict[str, Any]:
+   keywords = ["rumor", "unconfirmed", "fake news", "scam", "hoax"]
+   cleaned = re.sub(r"http\S+", "", text.lower())
+   matches = [k for k in keywords if k in cleaned]
+   return {"is_misinformation": bool(matches), "keywords": matches}
+
+
+
+
+def clean_post_text(text: str) -> str:
+   text = re.sub(r"http\S+|www\S+", "", text)    
+   text = re.sub(r"[^a-zA-Z\s]", "", text)      
+   return re.sub(r"\s+", " ", text).lower().strip()
+
+
+
+
+def check_duplicate(new: str, existing: List[str], threshold=0.85) -> bool:
+   clean = lambda x: set(clean_post_text(x).split())
+   nw = clean(new)
+   for old in existing:
+       if len(nw | clean(old)) == 0: continue
+       if len(nw & clean(old)) / len(nw | clean(old)) >= threshold:
+           return True
+   return False
+
+
+
+
+# post statistics
+
+
+def track_users(posts: List[Dict]):
+   stats = {}
+   for p in posts:
+       u = p["username"]
+       stats.setdefault(u, {"posts":0,"upvotes":0,"comments":0,"misinfo_posts":0})
+       stats[u]["posts"] += 1
+       stats[u]["upvotes"] += p["upvotes"]
+       stats[u]["comments"] += p["comments"]
+       if p["is_disinformation"]: stats[u]["misinfo_posts"] += 1
+   return stats
+
+
+
+
+def weekly_engagement(posts: List[Dict]):
+   week = datetime.utcnow() - timedelta(days=7)
+   filtered = [p for p in posts if datetime.fromisoformat(p["created_utc"]) >= week]
+  
+   return {
+       "posts": len(filtered),
+       "upvotes": sum(p["upvotes"] for p in filtered),
+       "comments": sum(p["comments"] for p in filtered),
+       "interactions": sum(p["upvotes"]+p["comments"] for p in filtered)
+   }
+
+
+
+
+def avg_engagement_by_category(posts):
+   groups, counts = {}, {}
+   for p in posts:
+       c = p["category"]
+       groups[c] = groups.get(c,0) + (p["upvotes"]+p["comments"])
+       counts[c] = counts.get(c,0) + 1
+   return {c: round(groups[c]/counts[c],2) for c in groups}
+
+
+
+
+# analyzers
+
+
+class ContentCategorizer(BaseAnalyzer):
+   def analyze(self, post_text):
+       result = {
+           "tone": categorize_by_tone(post_text),
+           "misinformation": detect_misinformation(post_text)
+       }
+       self.add_history(result)
+       return result
+   def describe(self): return "ContentCategorizer"
+
+
+
+
+class PostCleaner(BaseAnalyzer):
+   def __init__(self, post_text, existing=None):
+       super().__init__()
+       self.post_text = post_text
+       self.existing = existing or []
+   def analyze(self,_=None):
+       result = {
+           "cleaned": clean_post_text(self.post_text),
+           "duplicate": check_duplicate(self.post_text, self.existing)
+       }
+       self.add_history(result)
+       return result
+   def describe(self): return "PostCleaner"
+
+
+
+
+class UserTracker(BaseAnalyzer):
+   def __init__(self, posts): super().__init__(); self.posts=posts
+   def analyze(self, user):
+       res = track_users(self.posts).get(user,{})
+       self.add_history(res)
+       return res
+   def describe(self): return "UserTracker"
+
+
+
+
+class EngagementAnalyzer(BaseAnalyzer):
+   def __init__(self, posts): super().__init__(); self.posts=posts
+   def analyze(self,_=None):
+       res = weekly_engagement(self.posts)
+       self.add_history(res)
+       return res
+   def describe(self): return "EngagementAnalyzer"
+
+
+
+
+# sample reddit data
+
+
+def generate_fake_posts(n=30) -> List[Dict]:
+   users = ["mike","anna","james","ben","dev","lauren"]
+   cats = ["news","sports","meme","tech","discussion"]
+   texts = [
+       "LOL this is insane haha",
+       "BREAKING: unconfirmed rumor report",
+       "I HATE how reddit argues",
+       "New python update is crazy good",
+       "Anyone got sources for this?",
+       "FAKE NEWS scam hoax warning"
+   ]
+
+
+   posts=[]
+   for _ in range(n):
+       txt=random.choice(texts)
+       posts.append({
+           "username":random.choice(users),
+           "text":txt,
+           "upvotes":random.randint(0,120),
+           "comments":random.randint(0,40),
+           "created_utc":(datetime.utcnow()-timedelta(days=random.randint(0,12))).isoformat(),
+           "category":random.choice(cats),
+           "is_disinformation": any(k in txt.lower() for k in["fake","rumor","scam","unconfirmed"])
+       })
+   return posts
+
+
+
+
+# system manager
+
+
+class RedditSystem:
+   def __init__(self, posts=None):
+       self.posts = posts or generate_fake_posts()
+
+
+   # save and load reports
+
+
+   def save_state(self, path="state.json"):
+       with open(path,"w") as f: json.dump(self.posts,f,indent=2)
+
+
+   def load_state(self, path="state.json"):
+       with open(path) as f: self.posts=json.load(f)
+
+
+   def export_report(self, path="report.json"):
+       report={
+           "user_stats":track_users(self.posts),
+           "weekly":weekly_engagement(self.posts),
+           "category_engagement":avg_engagement_by_category(self.posts)
+       }
+       with open(path,"w") as f: json.dump(report,f,indent=2)
+       return report
+
+
+   # output
+
+
+   def run_demo(self):
+       print("\n🔍 Running Full Reddit Analysis Demo\n")
+
+
+       #analyzers
+       cat=ContentCategorizer()
+       clean=PostCleaner(self.posts[0]["text"])
+       engage=EngagementAnalyzer(self.posts)
+
+
+       print("Tone+Misinfo →",cat.analyze(self.posts[0]["text"]))
+       print("Clean+Duplicate →",clean.analyze())
+       print("Weekly Stats →",engage.analyze())
+
+
+       # report
+       rep=self.export_report()
+       print("\n📁 report.json generated:",rep)
+
+
+
+
+# project 4 application
+
+
+if __name__=="__main__":
+   system=RedditSystem()
+   system.run_demo()
+   system.save_state()
+   print("\n💾 Saved state → state.json")
+   print("🚀 Project 4 code runs successfully with ZERO external data.\n")
+
 
